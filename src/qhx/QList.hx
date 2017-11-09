@@ -286,13 +286,101 @@ class QList<T> {
             }
             result.add(Std.string(current.ele));
             first = false;
+            current = current.next;
         }
         result.add("]");
         return result.toString();
     }
 
-// TODO: iterator, descendingIterator, join, filter, map, forEach, sort, insertAt
-// toHaxeList, fromHaxeList, toHaxeArray, fromHaxeArray, replacePos
+    /**
+     * Returns a string representation of `this` List. Each element in this list will
+     * be seperated by using the `sep`-String as seperator.
+     */
+    public function join(sep:String):String {
+        var result:StringBuf = new StringBuf();
+        var first = true;
+        var current:QListNode<T> = head;
+        while(current != null) {
+            if(!first) {
+                result.add(sep);
+            }
+            result.add(Std.string(current.ele));
+            first = false;
+            current = current.next;
+        }
+        return result.toString();
+    }
+
+    /**
+     * Filter this list and return a new list containing only those
+     * elements, for which `f(x) == true`.
+     */
+    public function filter(f:T->Bool):QList<T> {
+        var l2:QList<T> = new QList<T>();
+        var current:QListNode<T> = head;
+        while(current != null) {
+            if(f(current.ele)) {
+                l2.addLast(current.ele);
+            }
+            current = current.next;
+        }
+        return l2;
+    }
+
+    /**
+     * Map a function onto a list. This means a new list
+     * will be returned, where each element has been converted
+     * by the function f.
+     */
+    public function map<U>(f:T->U):QList<U> {
+        var l2:QList<U> = new QList<U>();
+        var current:QListNode<T> = head;
+        while(current != null) {
+            l2.addLast(f(current.ele));
+            current = current.next;
+        }
+        return l2;
+    }
+
+    /**
+     * Return a reversed list.
+     */
+    public function reverse():QList<T> {
+        var l2:QList<T> = new QList<T>();
+        var current:QListNode<T> = head;
+        while(current != null) {
+            l2.addFirst(current.ele);
+            current = current.next;
+        }
+        return l2;
+    }
+
+    /**
+     * Returns a copy of this list as ds.haxe.List.
+     */
+    public function toHaxeList():List<T> {
+        var l2:List<T> = new List<T>();
+        var current:QListNode<T> = head;
+        while(current != null) {
+            l2.add(current.ele);
+            current = current.next;
+        }
+        return l2;
+    }
+
+    /**
+     * Creates a QList from an haxe list.
+     */
+    public static function fromHaxeList<T>(l:List<T>):QList<T> {
+        var l2:QList<T> = new QList<T>();
+        for(ele in l) {
+            l2.addLast(ele);
+        }
+        return l2;
+    }
+
+// TODO: iterator, descendingIterator, forEach, sort, insertAt
+// toHaxeArray, fromHaxeArray, replacePos
 
     // Just for compilation check test
     public static function main() {}

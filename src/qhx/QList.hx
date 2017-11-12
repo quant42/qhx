@@ -107,25 +107,31 @@ class QList<T> {
 
     /**
      * Get the first element of `this` list.
-     * `null`will be returned if the list is empty.
+     * An exception is thrown if `this` list is empty.
      * The list itself will not be modified.
      */
     public function getFirst():Null<T> {
-        return (head == null) ? null : head.ele;
+        if(head == null) {
+            throw new NoSuchElementException();            
+        }
+        return head.ele;
     }
 
     /**
      * Get the last element of `this` list.
-     * `null`will be returned if the list is empty.
+     * An exception is thrown if `this` list is empty.
      * The list itself will not be modified.
      */
     public function getLast():Null<T> {
-        return (tail == null) ? null : tail.ele;
+        if(tail == null) {
+            throw new NoSuchElementException();
+        }
+        return tail.ele;
     }
 
     /**
      * Get an element of this list by it's index.
-     * `null` will be returned if there is no such index in the list.
+     * An exception is thrown if there is no such element in `this` list.
      * Please note, that indization on list is relatively slow (O(n)),
      * so if you relay heavely on this method, you may want to use
      * another datastructure instead!
@@ -142,16 +148,16 @@ class QList<T> {
             i--;
             current = current.next;
         }
-        return null;
+        throw new NoSuchElementException();
     }
 
     /**
      * Remove and return the first element of `this` list.
-     * `null` will be returned if the list is empty.
+     * An exception is thrown if `this` list is empty.
      */
     public function removeFirst():Null<T> {
         if(isEmpty()) {
-            return null;
+            throw new NoSuchElementException();
         }
         var result:T = head.ele;
         head = head.next;
@@ -166,11 +172,11 @@ class QList<T> {
 
     /**
      * Remove and return the last element of `this` list.
-     * `null` will be returned if the list is empty.
+     * An exception is thrown if `this` list is empty.
      */
     public function removeLast():Null<T> {
         if(isEmpty()) {
-            return null;
+            throw new NoSuchElementException();
         }
         var result:T = tail.ele;
         tail = tail.prev;
@@ -343,16 +349,14 @@ class QList<T> {
     }
 
     /**
-     * Return a reversed list.
+     * Rreverse `this` list.
      */
-    public function reverse():QList<T> {
-        var l2:QList<T> = new QList<T>();
+    public function reverse():Void {
         var current:QListNode<T> = head;
         while(current != null) {
-            l2.addFirst(current.ele);
-            current = current.next;
+            current.swap();
+            current = current.prev; // prev = next, since we reversed this element already
         }
-        return l2;
     }
 
     /**
@@ -413,5 +417,14 @@ private class QListNode<T> {
         this.prev = prev;
         this.ele = ele;
         this.next = next;
+    }
+
+    /**
+     * Swap next and prev.
+     */
+    public inline function swap():Void {
+        var swap:QListNode<T> = this.prev;
+        this.next = this.prev;
+        this.prev = swap;
     }
 }

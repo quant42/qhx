@@ -16,6 +16,8 @@
 
 package qhx;
 
+import haxe.ds.Vector;
+
 /**
  * A list of elements similar to haxe.ds.List. However this list
  * is a double linked list and contains additional methods not
@@ -194,11 +196,23 @@ class QList<T> {
      * This function removes an QListNode from the list.
      * PAY ATTENTION: This function will not explicitly
      * check if the QListNode to remove really is an
-     * element of this list (or another).
+     * element of this list (or the element of another
+     * list).
      */
     private inline function removeElement(n:QListNode<T>):Void {
-        //TODO
-        size--;
+        if(n == head) {
+            removeFirst();
+        } else if(n == tail) {
+            removeLast();
+        } else {
+            var p:QListNode<T> = n.prev;
+            var n:QListNode<T> = n.next;
+            p.next = n;
+            n.prev = p;
+            n.prev = null; // speedup garbage collection
+            p.prev = null;
+            size--;
+        }
     }
 
     /**
@@ -383,8 +397,73 @@ class QList<T> {
         return l2;
     }
 
-// TODO: iterator, descendingIterator, forEach, sort, insertAt
-// toHaxeArray, fromHaxeArray, replacePos
+    /**
+     * Create a haxe vector that contains the elements of `this` list.
+     */
+    public function toHaxeVector():Vector<T> {
+        var result:Vector<T> = new Vector<T>(this.size);
+        var i:Int = 0;
+        var current:QListNode<T> = head;
+        while(current != null) {
+            result[i++] = current.ele;
+            current = current.next;
+        }
+        return result;
+    }
+
+    /**
+     * Creates a QList from a haxe vector.
+     */
+    public static function fromHaxeVector<T>(l:Vector<T>):QList<T> {
+        var l2:QList<T> = new QList<T>();
+        for(i in 0...l.length) {
+            l2.addLast(l[i]);
+        }
+        return l2;
+    }
+
+    /**
+     * Sort the elements in `this` QList according to a
+     * comparator function `f`.
+     *
+     * `f(x,y)` should return 0 if x == y,
+     * `f(x,y)` should return >0 if x > y and
+     * `f(x,y)` should return <0 if x < y.
+     *
+     * This function modifies the list inplace.
+     */
+    public function sort(f:T->T->Int):Void {
+        throw "Not implemented yet!";
+        // trivial cases for sorting
+        // (maximal one element in list)
+        if(this.size <= 1) {
+            return;
+        }
+        // 
+        // ok, we have to go through the list
+        // and sort the whole thing ...
+        var splitList:List<T> = new List<T>();
+        while(splitList.length > 1) {}
+        return splitList.first();
+//a - b
+        f(this.getFirst(), this.getLast());
+        // TODO
+    }
+
+    /**
+     * Returns an iterator to iterate over the elements in `this` list.
+     */
+    public inline function iterator():QListIterator<T> {
+        return new QListIterator<T>(this.head, DIRECTION.FORWARD);
+    }
+
+    /**
+     * Returns an iterator to iterate in reversed direction over the
+     * elements in `this` lis.
+     */
+    public inline function reverseIterator():QListIterator<T> {
+        return new QListIterator<T>(this.head, DIRECTION.REVERSED);
+    }
 
     // Just for compilation check test
     public static function main() {}
@@ -426,5 +505,56 @@ private class QListNode<T> {
         var swap:QListNode<T> = this.prev;
         this.next = this.prev;
         this.prev = swap;
+    }
+}
+
+/**
+ * An enum to set the direction of the iteration.
+ */
+private enum DIRECTION {
+    FORWARD;
+    REVERSED;
+}
+
+/**
+ * An iterator to iterate over the elements in the list.
+ */
+private class QListIterator<T> {
+    /**
+     * The current element of `this` iterator.
+     */
+    var current:QListNode<T>;
+
+    /**
+     * The direction of the iteration.
+     */
+    var direction:DIRECTION;
+
+    /**
+     * Create a new iterator.
+     */
+    public inline function new(current:QListNode<T>, direction:DIRECTION) {
+        this.current = current;
+        this.direction = direction;
+    }
+
+    /**
+     * Whether there is a next element in the iterator.
+     */
+    public inline function hasNext():Bool {
+        return current != null;
+    }
+
+    /**
+     * Get the next element.
+     */
+    public inline function next():T {
+        var val:T = current.ele;
+        if(direction == DIRECTION.FORWARD) {
+            current = current.next;
+        } else {
+            current = current.prev;
+        }
+        return val;
     }
 }

@@ -139,16 +139,33 @@ class QList<T> {
      * another datastructure instead!
      */
     public function get(i:Int):Null<T> {
-        // TODO: this can be done faster by checking whether
-        // reaching the element is faster from the beginning
-        // or from the end!
-        var current:QListNode<T> = head;
-        while(current != null) {
-            if(i == 0) {
-                return current.ele;
+        if(!(0 <= i && i < this.size)) {
+            throw new NoSuchElementException();
+        }
+        if(i <= this.size / 2) {
+            // if the element is in the beggining half
+            // of the list => iterate from the beginning
+            var current:QListNode<T> = head;
+            while(current != null) {
+                if(i == 0) {
+                    return current.ele;
+                }
+                i--;
+                current = current.next;
             }
-            i--;
-            current = current.next;
+        } else {
+            // the element is at the end of the list,
+            // go from the end of the list
+            // in order to get it ...
+            var current:QListNode<T> = tail;
+            i = this.size - 1 - i;
+            while(current != null) {
+                if(i == 0) {
+                    return current.ele;
+                }
+                i--;
+                current = current.prev;
+            }
         }
         throw new NoSuchElementException();
     }
@@ -371,6 +388,9 @@ class QList<T> {
             current.swap();
             current = current.prev; // prev = next, since we reversed this element already
         }
+        var swap:QListNode<T> = head;
+        head = tail;
+        tail = swap;
     }
 
     /**
@@ -442,12 +462,14 @@ class QList<T> {
         // 
         // ok, we have to go through the list
         // and sort the whole thing ...
+/*
         var splitList:List<T> = new List<T>();
         while(splitList.length > 1) {}
         return splitList.first();
 //a - b
         f(this.getFirst(), this.getLast());
         // TODO
+*/
     }
 
     /**
@@ -503,8 +525,8 @@ private class QListNode<T> {
      */
     public inline function swap():Void {
         var swap:QListNode<T> = this.prev;
-        this.next = this.prev;
-        this.prev = swap;
+        this.prev = this.next;
+        this.next = swap;
     }
 }
 

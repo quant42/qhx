@@ -484,7 +484,7 @@ class QList<T> {
      * elements in `this` lis.
      */
     public inline function reverseIterator():QListIterator<T> {
-        return new QListIterator<T>(this.head, DIRECTION.REVERSED);
+        return new QListIterator<T>(this.tail, DIRECTION.REVERSED);
     }
 
     // Just for compilation check test

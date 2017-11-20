@@ -16,6 +16,7 @@
 
 package qhx;
 
+import haxe.ds.ListSort;
 import haxe.ds.Vector;
 
 /**
@@ -112,7 +113,7 @@ class QList<T> {
      * An exception is thrown if `this` list is empty.
      * The list itself will not be modified.
      */
-    public function getFirst():Null<T> {
+    public function getFirst():T {
         if(head == null) {
             throw new NoSuchElementException();            
         }
@@ -124,7 +125,7 @@ class QList<T> {
      * An exception is thrown if `this` list is empty.
      * The list itself will not be modified.
      */
-    public function getLast():Null<T> {
+    public function getLast():T {
         if(tail == null) {
             throw new NoSuchElementException();
         }
@@ -138,7 +139,15 @@ class QList<T> {
      * so if you relay heavely on this method, you may want to use
      * another datastructure instead!
      */
-    public function get(i:Int):Null<T> {
+    public function get(i:Int):T {
+        return _get(i).ele;
+    }
+
+    /**
+     * Internal function to fastly get the QListNode element
+     * at index i.
+     */
+    private function _get(i:Int):QListNode<T> {
         if(!(0 <= i && i < this.size)) {
             throw new NoSuchElementException();
         }
@@ -148,7 +157,7 @@ class QList<T> {
             var current:QListNode<T> = head;
             while(current != null) {
                 if(i == 0) {
-                    return current.ele;
+                    return current;
                 }
                 i--;
                 current = current.next;
@@ -161,7 +170,7 @@ class QList<T> {
             i = this.size - 1 - i;
             while(current != null) {
                 if(i == 0) {
-                    return current.ele;
+                    return current;
                 }
                 i--;
                 current = current.prev;
@@ -174,7 +183,7 @@ class QList<T> {
      * Remove and return the first element of `this` list.
      * An exception is thrown if `this` list is empty.
      */
-    public function removeFirst():Null<T> {
+    public function removeFirst():T {
         if(isEmpty()) {
             throw new NoSuchElementException();
         }
@@ -193,7 +202,7 @@ class QList<T> {
      * Remove and return the last element of `this` list.
      * An exception is thrown if `this` list is empty.
      */
-    public function removeLast():Null<T> {
+    public function removeLast():T {
         if(isEmpty()) {
             throw new NoSuchElementException();
         }
@@ -230,6 +239,19 @@ class QList<T> {
             p.prev = null;
             size--;
         }
+    }
+
+    /**
+     * Remove an element from `this` list by it's position `i`.
+     * This function throws an exception, if the corresponding
+     * position is not available.
+     * This function returns the element that was stored at
+     * that position.
+     */
+    public function remove(i:Int):T {
+        var qn:QListNode<T> = _get(i);
+        removeElement(qn);
+        return qn.ele;
     }
 
     /**
@@ -453,23 +475,17 @@ class QList<T> {
      * This function modifies the list inplace.
      */
     public function sort(f:T->T->Int):Void {
-        throw "Not implemented yet!";
         // trivial cases for sorting
         // (maximal one element in list)
         if(this.size <= 1) {
             return;
         }
-        // 
-        // ok, we have to go through the list
-        // and sort the whole thing ...
-/*
-        var splitList:List<T> = new List<T>();
-        while(splitList.length > 1) {}
-        return splitList.first();
-//a - b
-        f(this.getFirst(), this.getLast());
-        // TODO
-*/
+        // ok, use haxes default listsort for this
+        head = ListSort.sort(head, function(e1:QListNode<T>, e2:QListNode<T>) { return f(e1.ele, e2.ele); });
+        tail = head;
+        while(tail.next != null) {
+            tail = tail.next;
+        }
     }
 
     /**

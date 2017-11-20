@@ -204,19 +204,143 @@ class QListTests extends haxe.unit.TestCase {
     }
 
     public function testListGet():Void {
-        
+        var l1:QList<String> = new QList<String>();
+        try {
+            l1.get(-1);
+            assertEquals(1, 2);
+        } catch(e:NoSuchElementException) {
+        }
+        try {
+            l1.get(0);
+            assertEquals(1, 2);
+        } catch(e:NoSuchElementException) {
+        }
+        try {
+            l1.get(1);
+            assertEquals(1, 2);
+        } catch(e:NoSuchElementException) {
+        }
+        l1.addFirst("A");
+        try {
+            l1.get(-1);
+            assertEquals(1, 2);
+        } catch(e:NoSuchElementException) {
+        }
+        assertEquals("A", l1.get(0));
+        try {
+            l1.get(11);
+            assertEquals(1, 2);
+        } catch(e:NoSuchElementException) {
+        }
+        l1.addLast("B");
+        assertEquals("A", l1.get(0));
+        assertEquals("B", l1.get(1));
+        l1.addLast("C");
+        assertEquals("A", l1.get(0));
+        assertEquals("B", l1.get(1));
+        assertEquals("C", l1.get(2));
+        l1.addLast("D");
+        assertEquals("A", l1.get(0));
+        assertEquals("B", l1.get(1));
+        assertEquals("C", l1.get(2));
+        assertEquals("D", l1.get(3));
+        l1.addLast("E");
+        assertEquals("A", l1.get(0));
+        assertEquals("B", l1.get(1));
+        assertEquals("C", l1.get(2));
+        assertEquals("D", l1.get(3));
+        assertEquals("E", l1.get(4));
+        l1.addLast("F");
+        assertEquals("A", l1.get(0));
+        assertEquals("B", l1.get(1));
+        assertEquals("C", l1.get(2));
+        assertEquals("D", l1.get(3));
+        assertEquals("E", l1.get(4));
+        assertEquals("F", l1.get(5));
+        l1.addLast("G");
+        assertEquals("A", l1.get(0));
+        assertEquals("B", l1.get(1));
+        assertEquals("C", l1.get(2));
+        assertEquals("D", l1.get(3));
+        assertEquals("E", l1.get(4));
+        assertEquals("F", l1.get(5));
+        assertEquals("G", l1.get(6));
+        try {
+            l1.get(11);
+            assertEquals(1, 2);
+        } catch(e:NoSuchElementException) {
+        }
     }
 
     public function testListRemoveFirst():Void {
+        var l:QList<Int> = new QList<Int>();
+        try {
+            l.removeFirst();
+            assertEquals(1, 0);
+        } catch(e:NoSuchElementException) {
+        }
+        for(i in 0...10) {
+            l.addLast(i);
+        }
+        assertEquals(false, l.isEmpty());
+        for(i in 0...9) {
+            var x:Int = l.removeFirst();
+            assertEquals(i, x);
+            assertEquals(false, l.isEmpty());
+            assertEquals(10-1-i, l.size);
+        }
+        var x:Int = l.removeFirst();
+        assertEquals(9, x);
+        assertEquals(true, l.isEmpty());
+        assertEquals(0, l.size);
+        try {
+            l.removeFirst();
+            assertEquals(1, 0);
+        } catch(e:NoSuchElementException) {
+        }
     }
 
     public function testListRemoveLast():Void {
+        var l:QList<Int> = new QList<Int>();
+        try {
+            l.removeLast();
+            assertEquals(1, 0);
+        } catch(e:NoSuchElementException) {
+        }
+        for(i in 0...10) {
+            l.addLast(i);
+        }
+        assertEquals(false, l.isEmpty());
+        for(i in 0...9) {
+            var x:Int = l.removeLast();
+            assertEquals(i, 9-x);
+            assertEquals(false, l.isEmpty());
+            assertEquals(10-1-i, l.size);
+        }
+        var x:Int = l.removeLast();
+        assertEquals(0, x);
+        assertEquals(true, l.isEmpty());
+        assertEquals(0, l.size);
+        try {
+            l.removeLast();
+            assertEquals(1, 0);
+        } catch(e:NoSuchElementException) {
+        }
+    }
+
+    public function testListRemove():Void {
+        var l:QList<Int> = new QList<Int>();
+
     }
 
     public function testListRemoveLastElementOccurance():Void {
+        var l:QList<Int> = new QList<Int>();
+        
     }
 
     public function testListRemoveFirstElementOccurance():Void {
+        var l:QList<Int> = new QList<Int>();
+        
     }
 
     public function testListContains():Void {
@@ -396,6 +520,33 @@ class QListTests extends haxe.unit.TestCase {
     }
 
     public function testListSort():Void {
+        var l:QList<Int> = new QList<Int>();
+        l.sort(function(i:Int, j:Int) { return i - j; });
+        assertEquals("", l.join(","));
+        l.addFirst(1);
+        l.sort(function(i:Int, j:Int) { return i - j; });
+        assertEquals("1", l.join(","));
+        l.addFirst(2);
+        l.sort(function(i:Int, j:Int) { return i - j; });
+        assertEquals("1,2", l.join(","));
+        l.addFirst(3);
+        l.sort(function(i:Int, j:Int) { return i - j; });
+        assertEquals("1,2,3", l.join(","));
+        assertEquals(1, l.getFirst());
+        assertEquals(3, l.getLast());
+        l.clear();
+        l.addFirst(9);
+        l.addFirst(3);
+        l.addFirst(7);
+        l.addFirst(8);
+        l.addFirst(5);
+        l.addFirst(1);
+        l.addFirst(-1);
+        l.addFirst(2);
+        l.sort(function(i:Int, j:Int) { return i - j; });
+        assertEquals("-1,1,2,3,5,7,8,9", l.join(","));
+        assertEquals(-1, l.getFirst());
+        assertEquals(9, l.getLast());
     }
 
     public function testListIterator():Void {

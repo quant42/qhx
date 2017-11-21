@@ -482,7 +482,6 @@ class QList<T> {
         }
         // ok, use haxes default listsort for this
         head = ListSort.sort(head, function(e1:QListNode<T>, e2:QListNode<T>) { return f(e1.ele, e2.ele); });
-        tail = head;
         while(tail.next != null) {
             tail = tail.next;
         }

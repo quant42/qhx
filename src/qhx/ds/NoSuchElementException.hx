@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package qhx;
+package qhx.ds;
 
 /**
  * A NoSuchElementException. This exception will be thrown when a specific

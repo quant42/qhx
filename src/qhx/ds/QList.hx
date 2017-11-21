@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package qhx;
+package qhx.ds;
 
 import haxe.ds.ListSort;
 import haxe.ds.Vector;

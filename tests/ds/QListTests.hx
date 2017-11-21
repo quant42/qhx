@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
+package ds;
+
 import haxe.ds.Vector;
 
 import haxe.unit.TestRunner;
 import haxe.unit.TestCase;
 
-import qhx.NoSuchElementException;
-import qhx.QList;
+import qhx.ds.NoSuchElementException;
+import qhx.ds.QList;
 
 /**
  * Tests to verify that the implementation of the QList works fine.

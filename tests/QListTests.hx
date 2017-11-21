@@ -330,17 +330,68 @@ class QListTests extends haxe.unit.TestCase {
 
     public function testListRemove():Void {
         var l:QList<Int> = new QList<Int>();
-
+        try {
+            l.remove(0);
+            assertEquals(1, 0);
+        } catch(e:NoSuchElementException) {
+        }
+        try {
+            l.remove(-1);
+            assertEquals(1, 0);
+        } catch(e:NoSuchElementException) {
+        }
+        try {
+            l.remove(1);
+            assertEquals(1, 0);
+        } catch(e:NoSuchElementException) {
+        }
+        assertEquals(true, l.isEmpty());
+        for(i in 1...11) {
+            l.addLast(i);
+        }
+        for(i in 0...10) {
+            var l2:QList<Int> = l.clone();
+            assertEquals(i+1, l2.remove(i));
+            assertEquals(9, l2.size);
+        }
+        try {
+            l.remove(-1);
+            assertEquals(1, 0);
+        } catch(e:NoSuchElementException) {
+        }
+        try {
+            l.remove(12);
+            assertEquals(1, 0);
+        } catch(e:NoSuchElementException) {
+        }
     }
 
     public function testListRemoveLastElementOccurance():Void {
         var l:QList<Int> = new QList<Int>();
-        
+        assertEquals(-1, l.removeLastElementOccurance(1));
+        l.addLast(2);
+        l.addLast(1);
+        l.addLast(2);
+        l.addLast(3);
+        l.addLast(1);
+        l.addLast(4);
+        l.addLast(8);
+        assertEquals(4, l.removeLastElementOccurance(1));
+        assertEquals("2,1,2,3,4,8", l.join(","));
     }
 
     public function testListRemoveFirstElementOccurance():Void {
         var l:QList<Int> = new QList<Int>();
-        
+        assertEquals(-1, l.removeFirstElementOccurance(1));
+        l.addLast(2);
+        l.addLast(1);
+        l.addLast(2);
+        l.addLast(3);
+        l.addLast(1);
+        l.addLast(4);
+        l.addLast(8);
+        assertEquals(1, l.removeFirstElementOccurance(1));
+        assertEquals("2,2,3,1,4,8", l.join(","));
     }
 
     public function testListContains():Void {
@@ -547,6 +598,35 @@ class QListTests extends haxe.unit.TestCase {
         assertEquals("-1,1,2,3,5,7,8,9", l.join(","));
         assertEquals(-1, l.getFirst());
         assertEquals(9, l.getLast());
+    }
+
+    public function testListShuffle():Void {
+        var l:QList<Int> = new QList<Int>();
+        l.shuffle(); // should not fail on empty list
+        for(i in 0...20) {
+            l.addLast(i);
+            l.shuffle(); // nor here!
+            assertEquals(i + 1, l.size);
+            assertEquals(false, l.isEmpty());
+        }
+        l.clear();
+        l.addLast(1);
+        l.addLast(2);
+        var found1:Bool = false;
+        var found2:Bool = false;
+        for(i in 0...1000) {
+            l.shuffle();
+            if(l.getFirst() == 1) {
+                found1 = true;
+            }
+            if(l.getFirst() == 2) {
+                found2 = true;
+            }
+            if(found1 && found2) {
+                break;
+            }
+        }
+        assertEquals(true, found1 && found2);
     }
 
     public function testListIterator():Void {

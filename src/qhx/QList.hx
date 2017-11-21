@@ -489,6 +489,13 @@ class QList<T> {
     }
 
     /**
+     * Shuffles the elements in `this` list.
+     */
+    public function shuffle():Void {
+        sort(function(t1:T, t2:T) { return (Math.random() > 0.5) ? -1 : 1; });
+    }
+
+    /**
      * Returns an iterator to iterate over the elements in `this` list.
      */
     public inline function iterator():QListIterator<T> {

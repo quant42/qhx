@@ -41,4 +41,18 @@ class QPair<U, V> {
         this.second = v;
     }
 
+    /**
+     * Clone `this`pair.
+     */
+    public inline function clone():QPair<U, V> {
+        return new QPair<U, V>(this.first, this.second);
+    }
+
+    /**
+     * Return a new pair object where the first and the
+     * second element of `this` pair are swapped.
+     */
+    public inline function swap():QPair<V, U> {
+        return new QPair<V, U>(this.second, this.first);
+    }
 }

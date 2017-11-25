@@ -509,6 +509,16 @@ class QList<T> {
         return new QListIterator<T>(this.tail, DIRECTION.REVERSED);
     }
 
+    /**
+     * Returns an iterator that starts to iterate over a list
+     * beginning from position `pos` in `this` list.
+     * This method will throw an exception, if `this` list has
+     * no element at the given position `pos`.
+     */
+    public inline function iteratorFrom(pos:Int):QListIterator<T> {
+        return new QListIterator<T>(_get(pos), DIRECTION.FORWARD);
+    }
+
     // Just for compilation check test
     public static function main() {}
 }

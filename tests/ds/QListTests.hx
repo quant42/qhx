@@ -23,6 +23,7 @@ import haxe.unit.TestCase;
 
 import qhx.ds.NoSuchElementException;
 import qhx.ds.QList;
+import qhx.ds.QList.QListIterator;
 
 /**
  * Tests to verify that the implementation of the QList works fine.
@@ -675,6 +676,89 @@ class QListTests extends haxe.unit.TestCase {
             }
             assertEquals(exp, s);
         }
+    }
+
+    public function testListIterFrom():Void {
+        var l:QList<Int> = new QList<Int>();
+        for(ele in 0...20) {
+            l.addLast(ele);
+        }
+        var s:String = "";
+        for(ele in l.iteratorFrom(4)) {
+            s = s + "," + ele;
+        }
+        assertEquals(",4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19", s);
+        var s:String = "";
+        for(ele in l.iteratorFrom(4, false)) {
+            s = s + "," + ele;
+        }
+        assertEquals(",4,3,2,1,0", s);
+    }
+
+    public function testListIteratorIndex():Void {
+        var l:QList<Int> = new QList<Int>();
+        for(ele in 0...20) {
+            l.addLast(ele * ele);
+        }
+        // index forward
+        var it:QListIterator<Int> = l.iterator();
+        var pos:Int = 0;
+        for(ele in it) {
+            assertEquals(++pos, it.index);
+        }
+        // reverse iterator
+        var it:QListIterator<Int> = l.reverseIterator();
+        var pos:Int = 19;
+        for(ele in it) {
+            assertEquals(--pos, it.index);
+        }
+    }
+
+    public function testListIteratorClone():Void {
+        var l:QList<Int> = new QList<Int>();
+        for(ele in 0...5) {
+            l.addLast(ele * ele);
+        }
+        // 2
+        var s:String = "";
+        var it:QListIterator<Int> = l.iterator();
+        while(it.hasNext()) {
+            var ele1:Int = it.next();
+            var it2:QListIterator<Int> = it.clone();
+            while(it2.hasNext()) {
+                var ele2:Int = it2.next();
+                s = s + "(" + ele1 + "," + ele2 + ")";
+            }
+        }
+        assertEquals("(0,1)(0,4)(0,9)(0,16)(1,4)(1,9)(1,16)(4,9)(4,16)(9,16)", s);
+        // 2r
+        var s:String = "";
+        var it:QListIterator<Int> = l.reverseIterator();
+        while(it.hasNext()) {
+            var ele1:Int = it.next();
+            var it2:QListIterator<Int> = it.clone();
+            while(it2.hasNext()) {
+                var ele2:Int = it2.next();
+                s = s + "(" + ele1 + "," + ele2 + ")";
+            }
+        }
+        assertEquals("(16,9)(16,4)(16,1)(16,0)(9,4)(9,1)(9,0)(4,1)(4,0)(1,0)", s);
+        // 3
+        var s:String = "";
+        var it:QListIterator<Int> = l.iterator();
+        while(it.hasNext()) {
+            var ele1:Int = it.next();
+            var it2:QListIterator<Int> = it.clone();
+            while(it2.hasNext()) {
+                var ele2:Int = it2.next();
+                var it3:QListIterator<Int> = it2.clone();
+                while(it3.hasNext()) {
+                    var ele3:Int = it3.next();
+                    s = s + "(" + ele1 + "," + ele2 + "," + ele3 + ")";
+                }
+            }
+        }
+        assertEquals("(0,1,4)(0,1,9)(0,1,16)(0,4,9)(0,4,16)(0,9,16)(1,4,9)(1,4,16)(1,9,16)(4,9,16)", s);
     }
 
     public static function main():Void {

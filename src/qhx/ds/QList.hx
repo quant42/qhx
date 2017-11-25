@@ -498,7 +498,7 @@ class QList<T> {
      * Returns an iterator to iterate over the elements in `this` list.
      */
     public inline function iterator():QListIterator<T> {
-        return new QListIterator<T>(this.head, DIRECTION.FORWARD);
+        return new QListIterator<T>(this.head, DIRECTION.FORWARD, 0);
     }
 
     /**
@@ -506,7 +506,7 @@ class QList<T> {
      * elements in `this` lis.
      */
     public inline function reverseIterator():QListIterator<T> {
-        return new QListIterator<T>(this.tail, DIRECTION.REVERSED);
+        return new QListIterator<T>(this.tail, DIRECTION.REVERSED, size - 1);
     }
 
     /**
@@ -515,8 +515,10 @@ class QList<T> {
      * This method will throw an exception, if `this` list has
      * no element at the given position `pos`.
      */
-    public inline function iteratorFrom(pos:Int):QListIterator<T> {
-        return new QListIterator<T>(_get(pos), DIRECTION.FORWARD);
+    public inline function iteratorFrom(pos:Int, ?forward:Bool=true):QListIterator<T> {
+        return (forward) ?
+            new QListIterator<T>(_get(pos), DIRECTION.FORWARD, pos) :
+            new QListIterator<T>(_get(pos), DIRECTION.REVERSED, pos);
     }
 
     // Just for compilation check test
@@ -565,7 +567,7 @@ private class QListNode<T> {
 /**
  * An enum to set the direction of the iteration.
  */
-private enum DIRECTION {
+enum DIRECTION {
     FORWARD;
     REVERSED;
 }
@@ -573,23 +575,29 @@ private enum DIRECTION {
 /**
  * An iterator to iterate over the elements in the list.
  */
-private class QListIterator<T> {
+class QListIterator<T> {
     /**
      * The current element of `this` iterator.
      */
-    var current:QListNode<T>;
+    private var current:QListNode<T>;
 
     /**
      * The direction of the iteration.
      */
-    var direction:DIRECTION;
+    public var direction(default, null):DIRECTION;
+
+    /**
+     * The index of the current element.
+     */
+    public var index(default, null):Int;
 
     /**
      * Create a new iterator.
      */
-    public inline function new(current:QListNode<T>, direction:DIRECTION) {
+    public inline function new(current:QListNode<T>, direction:DIRECTION, index:Int) {
         this.current = current;
         this.direction = direction;
+        this.index = index;
     }
 
     /**
@@ -606,9 +614,18 @@ private class QListIterator<T> {
         var val:T = current.ele;
         if(direction == DIRECTION.FORWARD) {
             current = current.next;
+            index++;
         } else {
             current = current.prev;
+            index--;
         }
         return val;
+    }
+
+    /**
+     * Clone (the current state of) this iterator.
+     */
+    public inline function clone():QListIterator<T> {
+        return new QListIterator<T>(this.current, this.direction, this.index);
     }
 }

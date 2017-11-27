@@ -695,10 +695,17 @@ class QListTests extends haxe.unit.TestCase {
         assertEquals(",4,3,2,1,0", s);
     }
 
-    public function testListIteratorIndex():Void {
+    public function testListIteratorNextIndex():Void {
         var l:QList<Int> = new QList<Int>();
         for(ele in 0...20) {
             l.addLast(ele * ele);
+        }
+        // normal usage
+        var it:QListIterator<Int> = l.iterator();
+        while(it.hasNext()) {
+            var index:Int = it.index;
+            var ele = it.next();
+            assertEquals(index * index, ele);
         }
         // index forward
         var it:QListIterator<Int> = l.iterator();
@@ -709,6 +716,18 @@ class QListTests extends haxe.unit.TestCase {
         // reverse iterator
         var it:QListIterator<Int> = l.reverseIterator();
         var pos:Int = 19;
+        for(ele in it) {
+            assertEquals(--pos, it.index);
+        }
+        // from forward iterator
+        var it:QListIterator<Int> = l.iteratorFrom(4);
+        var pos:Int = 4;
+        for(ele in it) {
+            assertEquals(++pos, it.index);
+        }
+        // from reversed iterator
+        var it:QListIterator<Int> = l.iteratorFrom(4, false);
+        var pos:Int = 4;
         for(ele in it) {
             assertEquals(--pos, it.index);
         }

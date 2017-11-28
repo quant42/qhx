@@ -23,7 +23,7 @@ import haxe.ds.Vector;
  *
  * @author Yann Spoeri
  */
-class QHashSet<T> {
+class QHashSet<T:{ function hashCode():Int; function equals(t:T):Bool; }> {
     /**
      * The load factor of `this` set. Once there are more elements
      * in `this` set than loadFact * storageSize, the internal
@@ -81,11 +81,30 @@ class QHashSet<T> {
     /**
      * Remove all elements in `this` list.
      */
-    public function clear():Void {
+    public function clear(?size:Int=100):Void {
+        // size should be at least 1
+        if (size < 1) {
+            throw "Size need to be bigger than 1!";
+        }
+        // ok, clear        
         this.size = 0;
-        this.storage = new Vector<QList<QHashSetElement<T>>>(this.storage.length);
+        this.storage = new Vector<QList<QHashSetElement<T>>>(size);
         this.first = null;
         this.last = null;
+    }
+
+    /**
+     * Helper function:
+     *
+     * For a given element, return the index where to store
+     * the element in the storage.
+     */
+    private inline function getIndex(ele:T, storageSize:Int) {
+        var index:Int = ele.hashCode() % storageSize;
+        if(index < 0) {
+            index = storageSize + index;
+        }
+        return index;
     }
 
     /**
@@ -99,7 +118,7 @@ class QHashSet<T> {
         var hce:QHashSetElement<T> = first;
         while (hce != null) {
             // get the position in data where to insert the object
-            var index:Int = hce.getIndex(newCapacity);
+            var index:Int = getIndex(hce.ele, newCapacity);
             // check if there's already a QList at the requested position
             // if not create one ...
             if (newStorage[index] == null) {
@@ -113,6 +132,72 @@ class QHashSet<T> {
         // set data
         this.storage = newStorage;
     }
+
+    /**
+     * This is a helper function that checks whether a given item
+     * may be found in list at index i.
+     */
+    private inline function listContains(item:T, index:Int):Bool {
+        var result:Bool = false;
+        if(this.storage[index] != null) {
+            for(sItem in this.storage[index]) {
+                if(sItem.ele.equals(item)) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Put an item into `this` hashset.
+     */
+    public function put(item:T):Bool {
+        // get the hashCode of the item to add.
+        var index:Int = getIndex(item, this.storage.length);
+        // check if this element is already in `this` hashset.
+        // if yes, we do not have to do anything.
+        if(listContains(item, index)) {
+            return false;
+        }
+        // ok, we have to add the item to `this` hashset.
+        // check if we have to resize
+        if(this.size * loadFact > this.size) {
+            changeCapacity(this.storage.length * 2);
+        }
+        // create a new hashset element to add to this set
+        var hce = new QHashSetElement(this.last, item, item.hashCode(), null);
+        // now actually add it
+        this.size++;
+        if(this.storage[index] == null) {
+            var myList:QList<QHashSetElement<T>> = new QList<QHashSetElement<T>>();
+            myList.addLast(hce);
+            this.storage[index] = myList;
+        } else {
+            this.storage[index].addLast(hce);
+        }
+        if(this.first == null) {
+            this.first = hce;
+        }
+        if(this.last != null) {
+            this.last.next = hce;
+        }
+        this.last = hce;
+        return true;
+    }
+
+    public function remove(item:T):Void { return; } // TODO
+
+    /**
+     * Check if `this` hashset contains an item.
+     */
+    public function contains(item:T):Bool {
+        var index:Int = getIndex(item, this.storage.length);
+        return listContains(item, index);
+    }
+
+    public function iterator():Iterator<T> { return null; } // TODO
 
     // Just for compilation check test
     public static function main() {}
@@ -151,17 +236,5 @@ private class QHashSetElement<T> {
         this.ele = ele;
         this.hashCode = hashCode;
         this.next = next;
-    }
-
-    /**
-     * For a given capacity, return the index where to store
-     * `this` element in the storage.
-     */
-    public inline function getIndex(capacity:Int) {
-        var index:Int = this.hashCode % capacity;
-        if(index < 0) {
-            index = capacity + index;
-        }
-        return index;
     }
 }

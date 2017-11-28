@@ -299,7 +299,8 @@ class QList<T> {
     }
 
     /**
-     * Return whether `this` list contains an element `ele`.
+     * Return whether `this` list contains an element `ele`
+     * (comparison made with `==` operator).
      */
     public function contains(ele:T):Bool {
         var current:QListNode<T> = head;

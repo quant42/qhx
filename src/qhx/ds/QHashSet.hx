@@ -18,6 +18,8 @@ package qhx.ds;
 
 import haxe.ds.Vector;
 
+import qhx.ds.QList.QListIterator;
+
 /**
  * A set to store elements of a certain type.
  *
@@ -29,7 +31,7 @@ class QHashSet<T:{ function hashCode():Int; function equals(t:T):Bool; }> {
      * in `this` set than loadFact * storageSize, the internal
      * storeage of `this` set will get doubled.
      */
-    private var loadFact:Float;
+    public var loadFact(default, null):Float;
 
     /**
      * The number of elements currently stored in `this` set.
@@ -44,12 +46,12 @@ class QHashSet<T:{ function hashCode():Int; function equals(t:T):Bool; }> {
     /**
      * The first added element.
      */
-    public var first(default, null):QHashSetElement<T>;
+    private var first:QHashSetElement<T>;
 
     /**
      * The last added element.
      */
-    public var last(default, null):QHashSetElement<T>;
+    private var last:QHashSetElement<T>;
 
     /**
      * Create a new HashSet.
@@ -168,7 +170,7 @@ class QHashSet<T:{ function hashCode():Int; function equals(t:T):Bool; }> {
         }
         // create a new hashset element to add to this set
         var hce = new QHashSetElement(this.last, item, item.hashCode(), null);
-        // now actually add it
+        // now actually add it to storage
         this.size++;
         if(this.storage[index] == null) {
             var myList:QList<QHashSetElement<T>> = new QList<QHashSetElement<T>>();
@@ -177,17 +179,59 @@ class QHashSet<T:{ function hashCode():Int; function equals(t:T):Bool; }> {
         } else {
             this.storage[index].addLast(hce);
         }
-        if(this.first == null) {
-            this.first = hce;
-        }
+        // actual add it to list
         if(this.last != null) {
             this.last.next = hce;
+        } else {
+            this.first = hce;
         }
         this.last = hce;
         return true;
     }
 
-    public function remove(item:T):Void { return; } // TODO
+    /**
+     * Remove an element from `this` set.
+     */
+    public function remove(item:T):Bool {
+        // get the hashCode of the item to remove.
+        var index:Int = getIndex(item, this.storage.length);
+        // check if this element is really in `this` hashset.
+        // if no, we do not have to do anything.
+        if(this.storage[index] != null) {
+            var it:QListIterator<QHashSetElement<T>> = this.storage[index].iterator();
+            while(it.hasNext()) {
+                var index:Int = it.index;
+                var sItem:QHashSetElement<T> = it.next();
+                if(sItem.ele.equals(item)) {
+                    // ok, we found the item ...
+                    // now we have to remove this item ...
+                    // ... from the storage
+                    // TODO: speed this step up ...
+                    var hce:QHashSetElement<T> = this.storage[index].remove(index);
+                    // ... from size
+                    this.size--;
+                    // ... first and last
+                    if(first == hce) {
+                        first = hce.next;
+                    }
+                    if(last == hce) {
+                        last = hce.prev;
+                    }
+                    // ... hce.prev and hce.next
+                    if(hce.prev != null) {
+                        hce.prev.next = hce.next;
+                    }
+                    if(hce.next != null) {
+                        hce.next.prev = hce.prev;
+                    }
+                    // everything worked fine
+                    return true;
+                }
+            }
+        }
+        // not found ... there is no such item in this set.
+        return false;
+    }
 
     /**
      * Check if `this` hashset contains an item.
@@ -197,7 +241,9 @@ class QHashSet<T:{ function hashCode():Int; function equals(t:T):Bool; }> {
         return listContains(item, index);
     }
 
-    public function iterator():Iterator<T> { return null; } // TODO
+    public function iterator():Iterator<T> {
+        return new QHashSetIterator(this.first);
+    }
 
     // Just for compilation check test
     public static function main() {}
@@ -236,5 +282,45 @@ private class QHashSetElement<T> {
         this.ele = ele;
         this.hashCode = hashCode;
         this.next = next;
+    }
+}
+
+/**
+ * An iterator to iterate over the elements in the hashset.
+ */
+class QHashSetIterator<T> {
+    /**
+     * The current element of `this` iterator.
+     */
+    private var current:QHashSetElement<T>;
+
+    /**
+     * Create a new iterator.
+     */
+    public inline function new(current:QHashSetElement<T>) {
+        this.current = current;
+    }
+
+    /**
+     * Whether there is a next element in the iterator.
+     */
+    public inline function hasNext():Bool {
+        return current != null;
+    }
+
+    /**
+     * Get the next element.
+     */
+    public inline function next():T {
+        var val:T = current.ele;
+        current = current.next;
+        return val;
+    }
+
+    /**
+     * Clone (the current state of) this iterator.
+     */
+    public inline function clone():QHashSetIterator<T> {
+        return new QHashSetIterator<T>(this.current);
     }
 }

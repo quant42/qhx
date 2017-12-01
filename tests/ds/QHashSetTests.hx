@@ -19,16 +19,34 @@ package ds;
 import haxe.unit.TestRunner;
 import haxe.unit.TestCase;
 
+import qhx.ds.QHashSet;
+
 /**
- * Tests to run all datastructure tests.
+ * Tests to verify that the implementation of the QHashSet works fine.
  */
-class ALL {
+class QHashSetTests extends haxe.unit.TestCase {
+
+    public function testHashSetBasic():Void {
+        var hs:QHashSet<HashAble> = new QHashSet<HashAble>();
+        assertEquals(true, hs.isEmpty());
+    }
+
     public static function main():Void {
         var tr = new TestRunner();
-        tr.add(new QListTests());
-        tr.add(new QPairTests());
         tr.add(new QHashSetTests());
         tr.run();
     }
 }
 
+private class HashAble {
+    var s:Int = 0;
+    public function new(i:Int) {
+        s = i;
+    }
+    public function equals(o:HashAble):Bool {
+        return o.s == this.s;
+    }
+    public function hashCode():Int {
+        return s;
+    }
+}

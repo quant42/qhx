@@ -29,6 +29,23 @@ class QHashSetTests extends haxe.unit.TestCase {
     public function testHashSetBasic():Void {
         var hs:QHashSet<HashAble> = new QHashSet<HashAble>();
         assertEquals(true, hs.isEmpty());
+        assertEquals(0, hs.size);
+        var ele1:HashAble = new HashAble(0);
+        var ele2:HashAble = new HashAble(0);
+        hs.put(ele1);
+        assertEquals(true, hs.contains(ele2));
+        assertEquals(false, hs.isEmpty());
+        assertEquals(1, hs.size);
+        assertEquals(true, hs.contains(ele1));
+        assertEquals(true, hs.contains(ele2));
+        hs.put(ele1);
+        assertEquals(false, hs.isEmpty());
+        assertEquals(1, hs.size);
+        hs.clear();        
+        assertEquals(false, hs.contains(ele1));
+        assertEquals(false, hs.contains(ele2));
+        assertEquals(true, hs.isEmpty());
+        assertEquals(0, hs.size);
     }
 
     public static function main():Void {

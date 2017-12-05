@@ -30,6 +30,7 @@ class QHashSetTests extends haxe.unit.TestCase {
         var hs:QHashSet<HashAble> = new QHashSet<HashAble>();
         assertEquals(true, hs.isEmpty());
         assertEquals(0, hs.size);
+        assertEquals("{}", hs.toString());
         var ele1:HashAble = new HashAble(0);
         var ele2:HashAble = new HashAble(0);
         hs.put(ele1);
@@ -38,6 +39,7 @@ class QHashSetTests extends haxe.unit.TestCase {
         assertEquals(1, hs.size);
         assertEquals(true, hs.contains(ele1));
         assertEquals(true, hs.contains(ele2));
+        assertEquals("{1}", hs.toString());
         hs.put(ele1);
         assertEquals(false, hs.isEmpty());
         assertEquals(1, hs.size);
@@ -47,6 +49,8 @@ class QHashSetTests extends haxe.unit.TestCase {
         assertEquals(true, hs.isEmpty());
         assertEquals(0, hs.size);
     }
+
+    
 
     public static function main():Void {
         var tr = new TestRunner();
@@ -65,5 +69,15 @@ private class HashAble {
     }
     public function hashCode():Int {
         return s;
+    }
+    @:to
+    private inline function toStr():String
+    {
+        return Std.string(s);
+    }
+    @:from
+    static inline function fromInt(value:Int):HashAble
+    {
+        return new HashAble(value);
     }
 }

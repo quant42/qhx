@@ -241,6 +241,29 @@ class QHashSet<T:{ function hashCode():Int; function equals(t:T):Bool; }> {
         return listContains(item, index);
     }
 
+    /**
+     * Returns a textual representation of `this` set.
+     */
+    public function toString():String {
+        var result:StringBuf = new StringBuf();
+        var firstE = true;
+        var current:QHashSetElement<T> = first;
+        result.add("{");
+        while(current != null) {
+            if(!firstE) {
+                result.add(";");
+            }
+            result.add(Std.string(current.ele));
+            firstE = false;
+            current = current.next;
+        }
+        result.add("}");
+        return result.toString();
+    }
+
+    /**
+     * Create an iterator to iterate over `this` set.
+     */
     public function iterator():Iterator<T> {
         return new QHashSetIterator(this.first);
     }

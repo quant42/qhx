@@ -18,6 +18,7 @@ package qhx.ds;
 
 import haxe.ds.Vector;
 
+import qhx.QObject;
 import qhx.ds.QList.QListIterator;
 
 /**
@@ -25,7 +26,7 @@ import qhx.ds.QList.QListIterator;
  *
  * @author Yann Spoeri
  */
-class QHashSet<T:{ function hashCode():Int; function equals(t:T):Bool; }> {
+class QHashSet<T extends QObject> extends QObject {
     /**
      * The load factor of `this` set. Once there are more elements
      * in `this` set than loadFact * storageSize, the internal

@@ -14,31 +14,27 @@
  * limitations under the License.
  */
 
-abstract QString(String) {
+abstract QInt(Int) {
     
-    inline function new(s:String) {
-        this = s;
+    inline function new(i:Int) {
+        this = i;
     }
     
     @:from
-    public static inline function fromStr(s:String):QString {
-        return new QString(s);
+    public static inline function fromInt(i:Int):QInt {
+        return new QInt(i);
     }
     
     @:to
-    public inline function toStr():String {
+    public inline function toInt():Int {
         return this;
     }
 
     public inline function hashCode():Int {
-        var result:Int = 5;
-        for(i in 0...this.length) {
-            result += 7 + 31 * this.charCodeAt(i);
-        }
-        return result;
+        return this;
     }
 
-    public inline function equals(s:String) {
-        return s == this;
+    public inline function equals(i:Int) {
+        return this == i;
     }
 }

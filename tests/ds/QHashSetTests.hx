@@ -39,7 +39,7 @@ class QHashSetTests extends haxe.unit.TestCase {
         assertEquals(1, hs.size);
         assertEquals(true, hs.contains(ele1));
         assertEquals(true, hs.contains(ele2));
-        assertEquals("{1}", hs.toString());
+        assertEquals("{0}", hs.toString());
         hs.put(ele1);
         assertEquals(false, hs.isEmpty());
         assertEquals(1, hs.size);
@@ -69,5 +69,9 @@ private class HashAble {
     }
     public function hashCode():Int {
         return s;
+    }
+    @to
+    public inline function toString():String {
+        return Std.string(s);
     }
 }

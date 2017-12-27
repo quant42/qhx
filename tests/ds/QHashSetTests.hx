@@ -70,14 +70,4 @@ private class HashAble {
     public function hashCode():Int {
         return s;
     }
-    @:to
-    private inline function toStr():String
-    {
-        return Std.string(s);
-    }
-    @:from
-    static inline function fromInt(value:Int):HashAble
-    {
-        return new HashAble(value);
-    }
 }

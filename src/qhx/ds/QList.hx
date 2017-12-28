@@ -335,6 +335,7 @@ class QList<T> {
     /**
      * Returns a textual representation of `this` QList.
      */
+    @:to
     public function toString():String {
         var result:StringBuf = new StringBuf();
         var first = true;

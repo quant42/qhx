@@ -244,6 +244,7 @@ class QHashSet<T:{function hashCode():Int; function equals(t:T):Bool;}> {
     /**
      * Returns a textual representation of `this` set.
      */
+    @:to
     public function toString():String {
         var result:StringBuf = new StringBuf();
         var firstE = true;

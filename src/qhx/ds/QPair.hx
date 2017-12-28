@@ -55,4 +55,12 @@ class QPair<U, V> {
     public inline function swap():QPair<V, U> {
         return new QPair<V, U>(this.second, this.first);
     }
+
+    /**
+     * Get a textual representation of this pair object.
+     */
+    @:to
+    public inline function toString():String {
+        return "(" + Std.string(this.first) + ", " + Std.string(this.second) + ")";
+    }
 }

@@ -443,11 +443,7 @@ class QList<T> {
 
     @:from
     public function fromHaxeListC<T>(l:List<T>):QList<T> {
-        var l2:QList<T> = new QList<T>();
-        for(ele in l) {
-            l2.addLast(ele);
-        }
-        return l2;
+        return fromHaxeList(l);
     }
 
     /**

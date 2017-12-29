@@ -441,6 +441,15 @@ class QList<T> {
         return l2;
     }
 
+    @:from
+    public function fromHaxeListC<T>(l:List<T>):QList<T> {
+        var l2:QList<T> = new QList<T>();
+        for(ele in l) {
+            l2.addLast(ele);
+        }
+        return l2;
+    }
+
     /**
      * Create a haxe vector that contains the elements of `this` list.
      */

@@ -14,29 +14,19 @@
  * limitations under the License.
  */
 
-package qhx.types;
+package types;
 
-abstract QFloat(Float) {
-    
-    inline function new(i:Float) {
-        this = i;
-    }
-    
-    @:from
-    public static inline function fromFloat(i:Float):QFloat {
-        return new QFloat(i);
-    }
-    
-    @:to
-    public inline function toFloat():Float {
-        return this;
-    }
+import haxe.unit.TestRunner;
+import haxe.unit.TestCase;
 
-    public inline function hashCode():Int {
-        return Math.ceil(this);
-    }
-
-    public inline function equals(i:Float) {
-        return this == i;
+/**
+ * Tests to run all types tests.
+ */
+class ALL {
+    public static function main():Void {
+        var tr = new TestRunner();
+        tr.add(new QBoolTests());
+        tr.run();
     }
 }
+

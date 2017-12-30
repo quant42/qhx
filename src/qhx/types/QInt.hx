@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+package qhx.types;
+
 abstract QInt(Int) {
     
     inline function new(i:Int) {

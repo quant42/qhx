@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
+package qhx.types;
+
+@:forward
 abstract QBool(Bool) {
-    
     inline function new(i:Bool) {
         this = i;
     }

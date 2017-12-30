@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+package qhx.types;
+
 abstract QString(String) {
     
     inline function new(s:String) {

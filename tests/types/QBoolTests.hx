@@ -31,10 +31,10 @@ class QBoolTests extends haxe.unit.TestCase {
         var t:QBool = true;
         assertEquals(false, f);
         assertEquals(true, t);
-        if(f) {
+        if(f.toBool()) {
             assertEquals("a", "b");
         }
-        if(!t) {
+        if(!t.toBool()) {
             assertEquals("a", "b");
         }
         assertEquals(0, f.hashCode());

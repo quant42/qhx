@@ -19,16 +19,26 @@ package types;
 import haxe.unit.TestRunner;
 import haxe.unit.TestCase;
 
+import qhx.types.QInt;
+
 /**
- * Tests to run all types tests.
+ * Tests to verify that the implementation of the QBool type works fine.
  */
-class ALL {
+class QIntTests extends haxe.unit.TestCase {
+    
+    public function testQFloatBasic():Void {
+        var qi1:QInt = 3;
+        var qi2:QInt = 1;
+        var i1:Float = 3;
+        var i2:Float = 1;
+        assertEquals(i1 * i2, qi1.toInt() * qi2.toInt());
+        assertEquals(false, qi1.hashCode() == qi2.hashCode());
+        assertEquals(false, qi1.equals(qi2));
+    }
+
     public static function main():Void {
         var tr = new TestRunner();
-        tr.add(new QBoolTests());
-        tr.add(new QFloatTests());
         tr.add(new QIntTests());
         tr.run();
     }
 }
-

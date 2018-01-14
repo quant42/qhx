@@ -17,7 +17,7 @@
 package qhx.types;
 
 @:forward
-abstract QBool(Bool) {
+abstract QBool(Bool) to Bool {
     inline function new(i:Bool) {
         this = i;
     }

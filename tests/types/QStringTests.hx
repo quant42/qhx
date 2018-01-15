@@ -31,6 +31,7 @@ class QStringTests extends haxe.unit.TestCase {
         var qs2:QString = "WORLD";
         var is:String = "HELLO";
         var is:String = "WORLD";
+        assertEquals("world", is.toLowerCase());
         assertEquals(false, qs1.hashCode() == qs2.hashCode());
         assertEquals(false, qs1.equals(qs2));
     }

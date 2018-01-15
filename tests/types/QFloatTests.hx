@@ -31,7 +31,10 @@ class QFloatTests extends haxe.unit.TestCase {
         var qf2:QFloat = 1.618;
         var f1:Float = 3.141592;
         var f2:Float = 1.618;
-        assertEquals(f1 * f2, qf1.toFloat() * qf2.toFloat());
+/*
+        assertEquals(f1 * f2, qf1 * qf2);
+        assertEquals(f1 * qf2, qf1 * f2);
+*/
         assertEquals(false, qf1.hashCode() == qf2.hashCode());
         assertEquals(false, qf1.equals(qf2));
     }

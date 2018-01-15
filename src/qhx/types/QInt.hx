@@ -16,7 +16,7 @@
 
 package qhx.types;
 
-abstract QInt(Int) {
+abstract QInt(Int) to Int {
     
     inline function new(i:Int) {
         this = i;

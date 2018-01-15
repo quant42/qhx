@@ -31,7 +31,7 @@ class QIntTests extends haxe.unit.TestCase {
         var qi2:QInt = 1;
         var i1:Float = 3;
         var i2:Float = 1;
-        assertEquals(i1 * i2, qi1.toInt() * qi2.toInt());
+        assertEquals(i1 * i2, qi1 * qi2);
         assertEquals(false, qi1.hashCode() == qi2.hashCode());
         assertEquals(false, qi1.equals(qi2));
     }

@@ -16,7 +16,7 @@
 
 package qhx.types;
 
-abstract QString(String) {
+abstract QString(String) to String {
     
     inline function new(s:String) {
         this = s;

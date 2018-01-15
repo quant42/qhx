@@ -16,7 +16,7 @@
 
 package qhx.types;
 
-abstract QFloat(Float) {
+abstract QFloat(Float) to Float {
     
     inline function new(i:Float) {
         this = i;
@@ -39,4 +39,5 @@ abstract QFloat(Float) {
     public inline function equals(i:Float) {
         return this == i;
     }
+
 }

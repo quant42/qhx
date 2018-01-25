@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-package types;
+import ds.ALL as DS_ALL;
+import types.ALL as TYPES_ALL;
 
 import haxe.unit.TestRunner;
 import haxe.unit.TestCase;
@@ -23,16 +24,10 @@ import haxe.unit.TestCase;
  * Tests to run all types tests.
  */
 class ALL {
-    public static function addTests(tr:TestRunner):Void {
-        tr.add(new QBoolTests());
-        tr.add(new QFloatTests());
-        tr.add(new QIntTests());
-        tr.add(new QStringTests());
-    }
-
     public static function main():Void {
         var tr = new TestRunner();
-        addTests(tr);
+        DS_ALL.addTests(tr);
+        TYPES_ALL.addTests(tr);
         tr.run();
     }
 }

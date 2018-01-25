@@ -23,11 +23,15 @@ import haxe.unit.TestCase;
  * Tests to run all datastructure tests.
  */
 class ALL {
-    public static function main():Void {
-        var tr = new TestRunner();
+    public static function addTests(tr:TestRunner):Void {
         tr.add(new QListTests());
         tr.add(new QPairTests());
         tr.add(new QHashSetTests());
+    }
+
+    public static function main():Void {
+        var tr = new TestRunner();
+        addTests(tr);
         tr.run();
     }
 }

@@ -11,4 +11,5 @@ The QHX HaXe library. The qhx library provides datastructures that may be useful
 # TODO list
  - priority queues
  - commandline parser
+ - Options
  - ...

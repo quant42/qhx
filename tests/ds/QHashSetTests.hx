@@ -50,7 +50,11 @@ class QHashSetTests extends haxe.unit.TestCase {
         assertEquals(0, hs.size);
     }
 
-    
+    public function testRemoveBasic():Void {
+    }
+
+    public function testIteratorBasic():Void {
+    }
 
     public static function main():Void {
         var tr = new TestRunner();
